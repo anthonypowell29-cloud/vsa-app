@@ -1,0 +1,11 @@
+[
+  { "id": "spk-ex-1", "name": "Alice Johnson", "title": "Chief Executive Officer", "avatar_url": "/avatars/alice.jpg", "category_id": "executives" },
+  { "id": "spk-ex-2", "name": "Robert King", "title": "Chief Operating Officer", "avatar_url": "/avatars/robert.jpg", "category_id": "executives" },
+  { "id": "spk-pr-1", "name": "Priya Patel", "title": "VP of Product", "avatar_url": "/avatars/priya.jpg", "category_id": "product" },
+  { "id": "spk-pr-2", "name": "Liam Wong", "title": "Product Manager", "avatar_url": "/avatars/liam.jpg", "category_id": "product" },
+  { "id": "spk-eng-1", "name": "Diego Ramirez", "title": "Head of Engineering", "avatar_url": "/avatars/diego.jpg", "category_id": "engineering" },
+  { "id": "spk-eng-2", "name": "Sofia Chen", "title": "Senior Engineer", "avatar_url": "/avatars/sofia.jpg", "category_id": "engineering" },
+  { "id": "spk-sales-1", "name": "Emily Davis", "title": "Sales Director", "avatar_url": "/avatars/emily.jpg", "category_id": "sales" },
+  { "id": "spk-sales-2", "name": "Mark Thompson", "title": "Account Executive", "avatar_url": "/avatars/mark.jpg", "category_id": "sales" }
+]
+  

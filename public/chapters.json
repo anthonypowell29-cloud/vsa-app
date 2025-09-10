@@ -1,0 +1,63 @@
+{
+  "id": "media-uuid",
+  "title": "Q3 Earnings Call",
+  "type": "previous",
+  "vod_chapters": [
+    {
+      "id": "c1",
+      "title": "Intro",
+      "description": "Opening context",
+      "in_time": "00:00:00",
+      "out_time": "00:05:30",
+      "order": 0,
+      "source": "broadcast"
+    },
+    {
+      "id": "c2",
+      "title": "Deep Dive",
+      "description": "Main discussion",
+      "in_time": "00:05:30",
+      "out_time": "00:15:00",
+      "order": 1,
+      "source": "broadcast"
+    }
+  ],
+  "vod_chapter_speakers": [
+    {
+      "id": "speaker-1",
+      "vod_chapter_id": "c1",
+      "speaker_name": "John Smith",
+      "speaker_title": "CEO",
+      "speaker_avatar_url": "https://cdn.example.com/avatars/john.jpg",
+      "in_time": "00:00:30",
+      "out_time": "00:05:00",
+      "order": 0,
+      "speaker_id": "speaker-uuid",
+      "speaker_category_id": "executives"
+    },
+    {
+      "id": "speaker-2",
+      "vod_chapter_id": "c2",
+      "speaker_name": "Jane Doe",
+      "speaker_title": "CFO",
+      "speaker_avatar_url": "https://cdn.example.com/avatars/jane.jpg",
+      "in_time": "00:05:30",
+      "out_time": "00:14:30",
+      "order": 0,
+      "speaker_id": "speaker-uuid-2",
+      "speaker_category_id": "executives"
+    },
+    {
+      "id": "speaker-3",
+      "vod_chapter_id": "c2",
+      "speaker_name": "Bob Wilson",
+      "speaker_title": "VP Sales",
+      "speaker_avatar_url": null,
+      "in_time": "00:14:30",
+      "out_time": "00:15:00",
+      "order": 1,
+      "speaker_id": null,
+      "speaker_category_id": null
+    }
+  ]
+}
