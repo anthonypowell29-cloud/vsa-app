@@ -8,7 +8,7 @@
       "title": "Intro",
       "description": "Opening context",
       "in_time": "00:00:00",
-      "out_time": "00:05:30",
+      "out_time": "00:00:30",
       "order": 0,
       "source": "broadcast"
     },
@@ -16,8 +16,8 @@
       "id": "c2",
       "title": "Deep Dive",
       "description": "Main discussion",
-      "in_time": "00:05:30",
-      "out_time": "00:15:00",
+      "in_time": "00:00:30",
+      "out_time": "00:01:02",
       "order": 1,
       "source": "broadcast"
     }
@@ -29,8 +29,8 @@
       "speaker_name": "John Smith",
       "speaker_title": "CEO",
       "speaker_avatar_url": "https://cdn.example.com/avatars/john.jpg",
-      "in_time": "00:00:30",
-      "out_time": "00:05:00",
+      "in_time": "00:00:10",
+      "out_time": "00:00:25",
       "order": 0,
       "speaker_id": "speaker-uuid",
       "speaker_category_id": "executives"
@@ -41,7 +41,7 @@
       "speaker_name": "Jane Doe",
       "speaker_title": "CFO",
       "speaker_avatar_url": "https://cdn.example.com/avatars/jane.jpg",
-      "in_time": "00:05:30",
+      "in_time": "00:00:20",
       "out_time": "00:14:30",
       "order": 0,
       "speaker_id": "speaker-uuid-2",
@@ -53,8 +53,8 @@
       "speaker_name": "Bob Wilson",
       "speaker_title": "VP Sales",
       "speaker_avatar_url": null,
-      "in_time": "00:14:30",
-      "out_time": "00:15:00",
+      "in_time": "00:00:30",
+      "out_time": "00:00:53",
       "order": 1,
       "speaker_id": null,
       "speaker_category_id": null
