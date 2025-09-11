@@ -70,7 +70,7 @@ export default function TimelineStudioModal({
   const contentRef = useRef<HTMLDivElement | null>(null);
 
   const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [scale, setScale] = useState(5); // px/sec (zoom)
+  const [scale, setScale] = useState(10); // px/sec (zoom)
   const [currentTime, setCurrentTime] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [speakerCatalog, setSpeakerCatalog] = useState<SpeakerCatalogItem[]>([]);

@@ -41,7 +41,7 @@
       "speaker_name": "Jane Doe",
       "speaker_title": "CFO",
       "speaker_avatar_url": "https://cdn.example.com/avatars/jane.jpg",
-      "in_time": "00:00:20",
+      "in_time": "00:00:30",
       "out_time": "00:00:40",
       "order": 0,
       "speaker_id": "speaker-uuid-2",
