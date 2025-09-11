@@ -81,9 +81,13 @@ export default function TimelineStudioModal({
   const [dragId, setDragId] = useState<{ type: "chapter" | "speaker"; chapterId: string; id: string } | null>(null);
   const [resize, setResize] = useState<{ edge: "L" | "R"; type: "chapter" | "speaker"; chapterId: string; id: string } | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
+  const [resizeOffset, setResizeOffset] = useState<number | null>(null);
 
   const [selected, setSelected] = useState<{ type: "chapter" | "speaker"; id: string } | null>(null);
   const [overlapWarning, setOverlapWarning] = useState<string | null>(null);
+  // Smooth pointer handling
+  const moveXRef = useRef<number | null>(null);
+  const rafMoveRef = useRef<number | null>(null);
   // Built-in fallback editor state
   const [editorChapterId, setEditorChapterId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
@@ -510,19 +514,35 @@ export default function TimelineStudioModal({
   const beginDrag = (e: React.MouseEvent, type: "chapter"|"speaker", chapterId: string, id: string, startSec: number) => {
     setDragId({ type, chapterId, id });
     setDragOffset(e.clientX - px(startSec));
+    // Prevent text selection while dragging
+    try { document.body.style.userSelect = "none"; } catch {}
   };
   const beginResize = (e: React.MouseEvent, edge: "L"|"R", type: "chapter"|"speaker", chapterId: string, id: string) => {
     e.stopPropagation();
     setResize({ edge, type, chapterId, id });
+    try { document.body.style.userSelect = "none"; } catch {}
+    // capture mouse-to-edge offset to avoid initial jump
+    const ch = chapters.find(c => c.id === chapterId);
+    if (!ch) { setResizeOffset(0); return; }
+    if (type === "chapter") {
+      const edgeSec = edge === "L" ? parseTime(ch.in_time) : parseTime(ch.out_time);
+      setResizeOffset(e.clientX - px(edgeSec));
+      return;
+    }
+    const s = ch.speakers.find(sp => sp.id === id);
+    if (s) {
+      const edgeSec = edge === "L" ? parseTime(s.in_time) : parseTime(s.out_time);
+      setResizeOffset(e.clientX - px(edgeSec));
+    } else {
+      setResizeOffset(0);
+    }
   };
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!dragId && !resize) return;
-
+  const processPointerMove = (clientX: number) => {
     setChapters(prev => prev.map(ch => {
       if (dragId && dragId.type === "chapter" && ch.id === dragId.id) {
         // move chapter + shift children, preventing overlap with other chapters
         const width = parseTime(ch.out_time) - parseTime(ch.in_time);
-        let ns = sec(e.clientX - dragOffset);
+        let ns = sec(clientX - dragOffset);
         // neighbor-aware bounds
         const others = prev.filter(o => o.id !== ch.id).sort((a,b)=>parseTime(a.in_time)-parseTime(b.in_time));
         let prevEndBound = 0;
@@ -559,7 +579,7 @@ export default function TimelineStudioModal({
           speakers: ch.speakers.map(s => {
             if (s.id !== dragId.id) return s;
             const width = parseTime(s.out_time) - parseTime(s.in_time);
-            let ns = sec(e.clientX - dragOffset);
+            let ns = sec(clientX - dragOffset);
             // Prevent overlap with neighbors within the same chapter
             const others = ch.speakers.filter(os => os.id !== s.id)
               .sort((a,b) => parseTime(a.in_time) - parseTime(b.in_time));
@@ -598,7 +618,7 @@ export default function TimelineStudioModal({
               if (oEnd <= parseTime(ch.in_time) && oEnd > prevEndBound) prevEndBound = oEnd;
             }
             const upper = parseTime(ch.out_time) - minWidth;
-            let newStart = clamp(sec(e.clientX), prevEndBound, upper);
+            let newStart = clamp(sec(clientX - (resizeOffset ?? 0)), prevEndBound, upper);
             if (Math.abs(newStart - prevEndBound) <= SNAP_THRESHOLD_SEC) newStart = prevEndBound;
             const delta = newStart - parseTime(ch.in_time);
             const chEnd = parseTime(ch.out_time);
@@ -623,7 +643,7 @@ export default function TimelineStudioModal({
               if (oStart >= parseTime(ch.out_time) && oStart < nextStartBound) nextStartBound = oStart;
             }
             const lower = parseTime(ch.in_time) + minWidth;
-            let newEnd = clamp(sec(e.clientX), lower, nextStartBound);
+            let newEnd = clamp(sec(clientX - (resizeOffset ?? 0)), lower, nextStartBound);
             if (Math.abs(newEnd - nextStartBound) <= SNAP_THRESHOLD_SEC) newEnd = nextStartBound;
             // also clamp speakers to new end
             return {
@@ -654,7 +674,7 @@ export default function TimelineStudioModal({
                   if (oEnd <= parseTime(s.in_time) && oEnd > prevEndBound) prevEndBound = oEnd;
                 }
                 const upper = parseTime(s.out_time) - 0.1;
-                let newStart = clamp(sec(e.clientX), prevEndBound, upper);
+                let newStart = clamp(sec(clientX - (resizeOffset ?? 0)), prevEndBound, upper);
                 if (Math.abs(newStart - prevEndBound) <= SNAP_THRESHOLD_SEC) newStart = prevEndBound;
                 return { ...s, in_time: formatTime(newStart) };
               } else {
@@ -668,7 +688,7 @@ export default function TimelineStudioModal({
                   if (oStart >= parseTime(s.out_time) && oStart < nextStartBound) nextStartBound = oStart;
                 }
                 const lower = parseTime(s.in_time) + 0.1;
-                let newEnd = clamp(sec(e.clientX), lower, nextStartBound);
+                let newEnd = clamp(sec(clientX - (resizeOffset ?? 0)), lower, nextStartBound);
                 if (Math.abs(newEnd - nextStartBound) <= SNAP_THRESHOLD_SEC) newEnd = nextStartBound;
                 return { ...s, out_time: formatTime(newEnd) };
               }
@@ -679,7 +699,23 @@ export default function TimelineStudioModal({
       return ch;
     }));
   };
-  const onMouseUp = () => { setDragId(null); setResize(null); };
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!dragId && !resize) return;
+    moveXRef.current = e.clientX;
+    if (rafMoveRef.current == null) {
+      rafMoveRef.current = requestAnimationFrame(() => {
+        rafMoveRef.current = null;
+        if (moveXRef.current != null) processPointerMove(moveXRef.current);
+      });
+    }
+  };
+  const onMouseUp = () => {
+    setDragId(null); setResize(null);
+    if (rafMoveRef.current) { cancelAnimationFrame(rafMoveRef.current); rafMoveRef.current = null; }
+    moveXRef.current = null;
+    setResizeOffset(null);
+    try { document.body.style.userSelect = ""; } catch {}
+  };
 
   // Zoom
   const zoom = (factor: number) => setScale(s => clamp(s * factor, 0.2, 80));
