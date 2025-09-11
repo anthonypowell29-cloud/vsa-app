@@ -42,7 +42,7 @@
       "speaker_title": "CFO",
       "speaker_avatar_url": "https://cdn.example.com/avatars/jane.jpg",
       "in_time": "00:00:20",
-      "out_time": "00:14:30",
+      "out_time": "00:00:40",
       "order": 0,
       "speaker_id": "speaker-uuid-2",
       "speaker_category_id": "executives"
@@ -53,7 +53,7 @@
       "speaker_name": "Bob Wilson",
       "speaker_title": "VP Sales",
       "speaker_avatar_url": null,
-      "in_time": "00:00:30",
+      "in_time": "00:00:40",
       "out_time": "00:00:53",
       "order": 1,
       "speaker_id": null,
