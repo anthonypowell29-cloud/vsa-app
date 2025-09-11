@@ -779,24 +779,23 @@ export default function TimelineStudioModal({
             ))}
           </div>
 
-          <div className={css.rightPane}>
-            <div style={{ width:"100%", aspectRatio:"16 / 9", background:"#000", display:"flex", alignItems:"center", justifyContent:"center", position:"relative" }}>
-              <video
-                ref={videoRef}
-                src={videoSrc}
-                controls
-                onTimeUpdate={(e)=> setCurrentTime((e.target as HTMLVideoElement).currentTime)}
-                onPlay={()=> setPlaying(true)}
-                onPause={()=> setPlaying(false)}
-                style={{ 
-                  width:"100%", 
-                  height:"100%", 
-                  objectFit:"contain", 
-                  background:"#000",
-                  display:"block"
-                }}
-              />
-            </div>
+          <div className={css.rightPane} style={{ height:"100%", background:"#000", position:"relative", overflow:"hidden", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <video
+              ref={videoRef}
+              src={videoSrc}
+              controls
+              onTimeUpdate={(e)=> setCurrentTime((e.target as HTMLVideoElement).currentTime)}
+              onPlay={()=> setPlaying(true)}
+              onPause={()=> setPlaying(false)}
+              style={{ 
+                maxWidth:"100%",
+                maxHeight:"100%",
+                width:"auto",
+                height:"auto",
+                objectFit:"contain",
+                background:"#000"
+              }}
+            />
           </div>
         </div>
 
